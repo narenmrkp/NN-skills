@@ -19,20 +19,6 @@ Before starting, ensure the following tools and accounts are ready:
 
 ---
 
-## ⚙️ Step 1: Clone the Repository
-
-```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
-
-⚙️ Step 2: Create an EKS Cluster
-eksctl create cluster --name tic-tac-toe-cluster --region ap-south-1 --node-type t3.medium --nodes 2
-kubectl get nodes
-
-
-
-
-
 Create EC2 (ubuntu, t2.medium) and create IAM Role with Administrator/S3 Full, EC2 Full, EKS Full accesses and attach this Role to this EC2
 Created self-hosted runner to this EC2 from Github Repo Actions Tab
 mkdir actions-runner && cd actions-runner
