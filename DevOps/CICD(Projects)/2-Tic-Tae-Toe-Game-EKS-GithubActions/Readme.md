@@ -1,130 +1,76 @@
-Tic-Tac-Toe Deployment on Amazon EKS using GitHub Actions
-Prerequisites
+# Deploy Tic-Tac-Toe Game on EKS using GitHub Actions
 
-AWS account with IAM user/role that has EKS, ECR (if using), EC2, IAM permissions.
+This repository demonstrates how to **deploy a Tic-Tac-Toe game on an AWS EKS cluster** using a fully automated **CI/CD pipeline with GitHub Actions**.  
+It will help you understand how to integrate GitHub Actions with AWS EKS, Docker, and Kubernetes for a real-world project deployment.
 
-An EKS cluster (create using Terraform provided in repo or use an existing one).
+---
 
-kubectl and awscli installed (for verification).
+## 📌 Prerequisites
 
-GitHub repository with Actions enabled (this repo).
+Before starting, ensure the following tools and accounts are ready:
 
-A container registry: Docker Hub (username + token) or Amazon ECR.
+- **AWS Account** with programmatic access (IAM User with EKS, ECR, and EC2 permissions).
+- **GitHub Account** with a repository containing this project code.
+- **kubectl** installed → [Install Guide](https://kubernetes.io/docs/tasks/tools/).
+- **AWS CLI** installed and configured (`aws configure`).
+- **eksctl** installed → [Install Guide](https://eksctl.io/).
+- **Docker** installed and running.
+- **Helm** installed → [Install Guide](https://helm.sh/docs/intro/install/).
 
-Step 1: Provision or Connect to EKS Cluster
+---
 
-If using Terraform in this repo:
+## ⚙️ Step 1: Clone the Repository
 
-Run terraform init
+```bash
+git clone https://github.com/<your-username>/<your-repo-name>.git
+cd <your-repo-name>
 
-Run terraform apply -auto-approve
-
-If using existing cluster: just note the cluster name and AWS region.
-
-Update kubeconfig to test connectivity:
-
-aws eks --region <AWS_REGION> update-kubeconfig --name <EKS_CLUSTER_NAME>
-
+⚙️ Step 2: Create an EKS Cluster
+eksctl create cluster --name tic-tac-toe-cluster --region ap-south-1 --node-type t3.medium --nodes 2
 kubectl get nodes
 
-Step 2: Setup GitHub Authentication
 
-Option A: GitHub OIDC
 
-Create an IAM Role for GitHub OIDC and allow your repo to assume it.
 
-Grant EKS + ECR/DockerHub permissions.
 
-Add AWS_ROLE_TO_ASSUME (role ARN) as GitHub variable.
+Create EC2 (ubuntu, t2.medium) and create IAM Role with Administrator/S3 Full, EC2 Full, EKS Full accesses and attach this Role to this EC2
+Created self-hosted runner to this EC2 from Github Repo Actions Tab
+mkdir actions-runner && cd actions-runner
+curl -o actions-runner-linux-x64-2.310.2.tar.gz -L https://github.com/actions/runner/releases/download/v2.310.2/actions-runner-linux-x64-2.310.2.tar.gz
+echo "fb28a1c3715e0a6c5051af0e6eeff9c255009e2eec6fb08bc2708277fbb49f93  actions-runner-linux-x64-2.310.2.tar.gz" | shasum -a 256 -c
+tar xzf ./actions-runner-linux-x64-2.310.2.tar.gz
+./config.sh --url https://github.com/Aj7Ay/Netflix-clone --token A2MXW4323ALGB72GGLH34NLFGI2T4
+Note: Enter needed details (Name, labels...etc)
+./run.sh
 
-Option B: Self-Hosted Runner on EC2
+on EC2:
+sudo apt-get update
+sudo apt install docker.io -y
+sudo usermod -aG docker ubuntu
+newgrp docker
+sudo chmod 777 /var/run/docker.sock
+docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+ec2-public-ip:9000    (login admin, password admin)
+Integrate Sonarqube and Github Actions properly as per instructions mentioned in Sonarqube dashboard under "Manually" Tab
+In Github Repo, create sonar-project.properties file with inside content as sonar.projectKey=Tic-game, Next create yaml file .github/workflows/build.yml
+and also configure needed passwords, secrets properly inside of Github Action secrets section
+On EC2:
+git clone https://github.com/Aj7Ay/TIC-TAC-TOE.git
+cd TIC-TAC-TOE
+cd Eks-terraform    # (Configure S3 bucket name in the backend file)
+terraform init
+terraform validate
+terraform plan
+terraform apply
+<ec2-ip:3000>      # output
+kubectl get all
 
-Launch Ubuntu EC2 with IAM Role (EKS + registry permissions).
+cd /home/ubuntu
+cd TIC-TAC-TOE
+cd Eks-terraform
+terraform destroy --auto-approve
 
-Register it as a self-hosted runner from repo → Settings → Actions → Runners.
 
-Start runner as service.
 
-Step 3: Configure GitHub Repo Secrets & Variables
 
-In your repo → Settings → Secrets and variables → Actions:
 
-Add DOCKERHUB_USERNAME and DOCKERHUB_TOKEN (if using Docker Hub).
-
-Add variables:
-
-AWS_REGION = your AWS region (e.g., ap-south-1)
-
-EKS_CLUSTER_NAME = your cluster name (e.g., EKS_CLOUD)
-
-KUBE_NAMESPACE = target namespace (e.g., default)
-
-IMAGE_REPO = Docker Hub repo (e.g., username/tic-tac-toe) or ECR repo URI
-
-IMAGE_TAG = v1 (or latest)
-
-AWS_ROLE_TO_ASSUME = IAM Role ARN (only if using OIDC)
-
-Step 4: Verify Project Files
-
-In k8s/deployment.yaml → confirm image: <IMAGE_REPO>:<IMAGE_TAG>.
-
-In k8s/service.yaml → confirm type: LoadBalancer and targetPort = app port.
-
-In .github/workflows/deploy.yml → confirm it points to your variables.
-
-Step 5: Run the CI/CD Pipeline
-
-Push changes to the main branch OR trigger workflow manually:
-
-Go to Actions tab → Select workflow → Run workflow
-
-GitHub Actions will automatically:
-
-Build the Docker image
-
-Push image to registry (Docker Hub or ECR)
-
-Update kubeconfig for your EKS cluster
-
-Apply deployment and service manifests
-
-Step 6: Verify Deployment
-
-After pipeline completes, run:
-
-kubectl get deploy,po,svc -n <KUBE_NAMESPACE>
-
-kubectl describe svc tic-tac-toe-service -n <KUBE_NAMESPACE>
-
-Get the service’s external hostname/IP:
-
-kubectl get svc tic-tac-toe-service -n <KUBE_NAMESPACE> -o wide
-
-Open the external link in browser → Tic-Tac-Toe game should load.
-
-Step 7: Cleanup
-
-To remove deployed resources:
-
-kubectl delete svc tic-tac-toe-service -n <KUBE_NAMESPACE>
-
-kubectl delete deploy tic-tac-toe -n <KUBE_NAMESPACE>
-
-If you created the cluster with Terraform:
-
-terraform destroy -auto-approve
-
-Troubleshooting Commands
-
-Check logs of pods:
-
-kubectl logs deploy/tic-tac-toe -n <KUBE_NAMESPACE>
-
-Check events if service pending:
-
-kubectl describe svc tic-tac-toe-service -n <KUBE_NAMESPACE>
-
-Verify kubeconfig context:
-
-kubectl config get-contexts
