@@ -8,3 +8,5 @@ python-dotenv
 bs4
 arxiv
 wikipedia
+chromadb
+faiss
