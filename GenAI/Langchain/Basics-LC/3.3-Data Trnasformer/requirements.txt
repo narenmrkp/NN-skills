@@ -1,6 +1,6 @@
 langchain
 langchain_community
-langchain-text-splitter
+langchain-text-splitters
 pypdf
 pymupdf
 python-dotenv
