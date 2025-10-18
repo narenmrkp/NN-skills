@@ -2,6 +2,7 @@ langchain
 langchain_community
 langchain-openai
 langchain-text-splitters
+langchain_huggingface
 pypdf
 pymupdf
 python-dotenv
