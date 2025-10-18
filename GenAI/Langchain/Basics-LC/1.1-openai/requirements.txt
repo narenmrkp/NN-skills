@@ -1,2 +1,3 @@
 langchain
-ipykernel
+# ipykernel    This is to run ipynb files in VSCode
+python-dotenv
