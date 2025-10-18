@@ -1,6 +1,7 @@
 langchain
 langchain_community
 pypdf
+pymupdf
 python-dotenv
 bs4
 arxiv
