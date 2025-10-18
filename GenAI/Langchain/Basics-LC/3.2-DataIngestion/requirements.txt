@@ -5,3 +5,4 @@ pymupdf
 python-dotenv
 bs4
 arxiv
+wikipedia
