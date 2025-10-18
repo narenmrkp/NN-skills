@@ -1,5 +1,6 @@
 langchain
 langchain_community
+langchain-openai
 langchain-text-splitters
 pypdf
 pymupdf
