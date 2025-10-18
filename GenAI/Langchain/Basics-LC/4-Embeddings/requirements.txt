@@ -10,3 +10,4 @@ arxiv
 wikipedia
 chromadb
 faiss
+sentence_transformers
