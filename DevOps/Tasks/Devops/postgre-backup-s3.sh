@@ -3,7 +3,7 @@ sudo apt install postgresql postgresql-contrib -y
 sudo -i -u postgres
 psql --> \q --> exit
 sudo -u postgres psql
-ALTER USER postgres WITH PASSWORD 'password';
+ALTER USER postgres WITH PASSWORD 'naren@123';
 CREATE DATABASE my_database;
 \c my_database;
 CREATE TABLE users (
