@@ -36,6 +36,23 @@ sudo gitlab-runner register --url https://gitlab.com/ --registration-token <toke
 sudo gitlab-runner start
 sudo gitlab-runner run
 
+if error comes during deploy stage
+sudo su
+sudo vi /home/gitlab-runner/.bash_logout
+Comment the if...fi block --> Esc :wq!
+sudo gitlab-runner restart  #from root
+sudo gitlab-runner start
+sudo gitlab-runner run
+
+check at GitLab –> Build –> Pipelines --> Run pipeline
+docker ps  (# on EC2)
+Ec2Public-ip:3000 --> access youtube cloned app in browser
+
+# Termination
+docker stop <container name>
+docker rm <container name>
+
+
 
 
 
