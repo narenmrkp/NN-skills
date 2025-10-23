@@ -69,7 +69,7 @@ INSERT INTO users (name, email) VALUES
 
 SELECT * FROM users;
 cd /etc/postgresql/16/main/
-sudo vi pg_hba.conf --> Update postgres with md5 instead of peer insdie this pg_hba.conf file
+sudo vi pg_hba.conf --> Update postgres with md5 instead of peer insdie this pg_hba.conf file Esc :wq! --> cd ~
 sudo systemctl status postgresql
 sudo systemctl reload postgresql
 
@@ -82,11 +82,12 @@ aws configure --> give keys, region
 vi .env
 # .env
 PG_USER="postgres"
-PG_PASSWORD="password"
+PG_PASSWORD="naren@123"
 PG_DATABASE="my_database"    	# Database to back up
 PG_TARGET_DATABASE="new_database"   # Database to restore to
-S3_BUCKET="BUCKET_NAME"
-S3_PATH="PATH"
+S3_BUCKET="nnbkt2025"
+S3_PATH="nnbackup"
+Esc wq! (save)
 
 vi backup.sh
 #!/bin/bash
