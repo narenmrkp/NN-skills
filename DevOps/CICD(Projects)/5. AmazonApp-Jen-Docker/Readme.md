@@ -5,7 +5,7 @@ Config Java & NodeJs --> Manage Jenkins --> Tools --> Install JDK(17) & NodeJs(1
 In Sonar Dashboard --> Administration --> Security --> Tokens --> Generate Token
 Administration–> Configuration–>Webhooks --> create --> Jenkins, <http://jenkins-public-ip:8080>/sonarqube-webhook/ --> Create
 Manage Jenkins --> Credentials (Global) --> secret Text --> copy & paste the above Sonar Token as Sonar-token
-Manage Jenkins --> Credentials (Global) --> username(narian318), password(xxxxxxxx) --> save
+Manage Jenkins --> Credentials (Global) --> Docker --> username(narian318), password(xxxxxxxx) --> save
 Manage Jenkins --> System --> sonar-server, xxxx:9000/, Sonar-token --> Apply & Save
 Manage Jenkins --> Tools --> Sonarqube Scanner Installation --> sonar-scanner, Install Automatically(Sonarqube scanner 4.8.0.2856)
 Manage Jenkins --> Tools --> DP-Check --> Install Automatically (dependancy check(6.5.1) --> Apply & Save
