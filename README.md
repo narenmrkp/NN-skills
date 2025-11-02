@@ -1,4 +1,3 @@
-# All of the tutorials are available on my YouTube channel; please visit there.
+# This Entire Repo is organized well with different Domain Skills of Narendra Nandyala, Folders wise nicely.
 
-Youtube Channel Link: https://youtube.com/@sunnysavita10?si=m0A0Cznge6VM3bTI
 
