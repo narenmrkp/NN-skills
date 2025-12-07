@@ -4,13 +4,16 @@ import sklearn.datasets
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+
 # loading the data from sklearn
 breast_cancer_dataset = sklearn.datasets.load_breast_cancer()
 print(breast_cancer_dataset)
+
 # loading the data to a data frame
 data_frame = pd.DataFrame(breast_cancer_dataset.data, columns = breast_cancer_dataset.feature_names)
 # print the first 5 rows of the dataframe
 data_frame.head()
+
 # adding the 'target' column to the data frame
 data_frame['label'] = breast_cancer_dataset.target
 # print last 5 rows of the dataframe
@@ -19,6 +22,7 @@ data_frame.tail()
 data_frame.shape
 # getting some information about the data
 data_frame.info()
+
 # checking for missing values
 data_frame.isnull().sum()
 # statistical measures about the data
